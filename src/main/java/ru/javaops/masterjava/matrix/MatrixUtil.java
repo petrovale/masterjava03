@@ -1,8 +1,9 @@
 package ru.javaops.masterjava.matrix;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.*;
 
 /**
  * gkislin
@@ -10,11 +11,48 @@ import java.util.concurrent.ExecutorService;
  */
 public class MatrixUtil {
 
+    static class Task implements Callable<Integer> {
+        final int rowId;
+        final int[][] matrixA, matrixB, matrixC;
+        final int matrixSize;
+
+        public Task(int[][] matrixA, int[][] matrixB, int rowId, int matrixSize, int[][] matrixC) {
+            this.rowId = rowId;
+            this.matrixA = matrixA;
+            this.matrixB = matrixB;
+            this.matrixSize = matrixSize;
+            this.matrixC =matrixC;
+        }
+
+        @Override
+        public Integer call() {
+            for (int j = 0; j < matrixSize; ++j) {
+                int sum = 0;
+                for (int k = 0; k < matrixSize; ++k)
+                    sum = sum + matrixA[rowId][k] * matrixB[j][k];
+                matrixC[rowId][j] = sum;
+            }
+            return null;
+        }
+    }
+
     // TODO implement parallel multiplication matrixA*matrixB
     public static int[][] concurrentMultiply(int[][] matrixA, int[][] matrixB, ExecutorService executor) throws InterruptedException, ExecutionException {
         final int matrixSize = matrixA.length;
         final int[][] matrixC = new int[matrixSize][matrixSize];
 
+        final int matrixBT[][] = new int[matrixSize][matrixSize];
+        for (int i = 0; i < matrixSize; i++) {
+            for (int j = 0; j < matrixSize; j++) {
+                matrixBT[j][i] = matrixB[i][j];
+            }
+        }
+
+        List<Callable<Integer>> listFrag = new ArrayList<>();
+        for (int i = 0; i < matrixSize; ++i) {
+            listFrag.add(new Task(matrixA, matrixBT, i, matrixSize, matrixC));
+        }
+        executor.invokeAll(listFrag);
         return matrixC;
     }
 
@@ -32,11 +70,11 @@ public class MatrixUtil {
 
             for (int i = 0; i < matrixSize; i++) {
                 int thisRow[] = matrixA[i];
-                int summand = 0;
+                int sum = 0;
                 for (int k = 0; k < matrixSize; k++) {
-                    summand += thisRow[k] * thatColumn[k];
+                    sum += thisRow[k] * thatColumn[k];
                 }
-                matrixC[i][j] = summand;
+                matrixC[i][j] = sum;
             }
         }
         return matrixC;
