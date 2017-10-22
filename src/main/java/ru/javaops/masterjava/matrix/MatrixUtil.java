@@ -11,7 +11,7 @@ import java.util.concurrent.*;
  */
 public class MatrixUtil {
 
-    static class Task implements Callable<Integer> {
+    static class Task implements Callable<Void> {
         final int rowId;
         final int[][] matrixA, matrixB, matrixC;
         final int matrixSize;
@@ -25,7 +25,7 @@ public class MatrixUtil {
         }
 
         @Override
-        public Integer call() {
+        public Void call() {
             for (int j = 0; j < matrixSize; ++j) {
                 int sum = 0;
                 for (int k = 0; k < matrixSize; ++k)
@@ -48,7 +48,7 @@ public class MatrixUtil {
             }
         }
 
-        List<Callable<Integer>> listFrag = new ArrayList<>();
+        List<Task> listFrag = new ArrayList<>();
         for (int i = 0; i < matrixSize; ++i) {
             listFrag.add(new Task(matrixA, matrixBT, i, matrixSize, matrixC));
         }
