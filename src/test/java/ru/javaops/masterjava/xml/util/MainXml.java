@@ -1,47 +1,45 @@
 package ru.javaops.masterjava.xml.util;
 
+import one.util.streamex.StreamEx;
 import com.google.common.io.Resources;
 import org.xml.sax.SAXException;
-import ru.javaops.masterjava.xml.schema2.*;
+import ru.javaops.masterjava.xml.schema.*;
 
-import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class MainXml {
+    private static final Comparator<User> USER_COMPARATOR = Comparator.comparing(User::getFullName).thenComparing(User::getEmail);
+
     private static final JaxbParser JAXB_PARSER = new JaxbParser(ObjectFactory.class);
 
     static {
         JAXB_PARSER.setSchema(Schemas.ofClasspath("payload.xsd"));
     }
 
-    private String nameProject;
-
-    public MainXml(String nameProject) {
-        this.nameProject = nameProject;
-    }
-
     public static void main(String[] args) throws IOException, JAXBException, SAXException {
-        MainXml mainXml = new MainXml("topjava");
+                if (args.length != 1) {
+            throw new IllegalArgumentException("project name parameter not found");
+        }
+        String nameProject = args[0];
 
         Payload payload = JAXB_PARSER.unmarshal(
                 Resources.getResource("payload.xml").openStream());
         List<User> users = payload.getUsers().getUser();
-        List<String> usersOfProject = new ArrayList<>();
-        for (User user : users) {
-            List<JAXBElement<Object>> groups = user.getGroup();
-            for (JAXBElement<Object> group : groups) {
-                if (((ProjectType) ((GroupType) group.getValue()).getProject()).getName().
-                        equals(mainXml.nameProject)) {
-                    usersOfProject.add(user.getFullName());
-                    break;
-                }
-            }
-        }
-        Collections.sort(usersOfProject, String::compareTo);
-        System.out.println(usersOfProject);
+
+        Project project = StreamEx.of(payload.getProjects().getProject())
+                .filter(p -> p.getName().equals(nameProject))
+                .findAny()
+                .orElseThrow(() -> new IllegalArgumentException("Invalid project name '" + nameProject + '\''));
+
+        final List<Project.Group> groupsOfProject = new ArrayList<>(project.getGroup());
+
+        Set<User> usersOfProject = StreamEx.of(payload.getUsers().getUser())
+                .filter(u -> !Collections.disjoint(groupsOfProject, u.getGroups()))
+                .collect(Collectors.toCollection(() -> new TreeSet<>(USER_COMPARATOR)));
+        usersOfProject.forEach(u -> System.out.println(u.getFullName() + "/" + u.getEmail()));
+
     }
 }

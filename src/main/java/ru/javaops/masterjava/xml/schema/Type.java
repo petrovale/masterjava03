@@ -1,5 +1,5 @@
 
-package ru.javaops.masterjava.xml.schema2;
+package ru.javaops.masterjava.xml.schema;
 
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlType;
