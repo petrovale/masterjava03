@@ -56,11 +56,6 @@ public class FileUploadServlet extends HttpServlet {
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
-        response.setContentType("text/html;charset=UTF-8");
-        response.setHeader("Pragma", "no-cache");
-        response.setHeader("Cache-Control", "no-cache");
-        response.setDateHeader("Expires", 0);
-
         WebContext ctx = new WebContext(request, response, request.getServletContext(),
                 request.getLocale());
         getTemplateEngine().process("upload", ctx, response.getWriter());

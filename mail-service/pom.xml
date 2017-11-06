@@ -6,14 +6,15 @@
 
     <parent>
         <groupId>ru.javaops</groupId>
-        <artifactId>parent</artifactId>
-        <relativePath>../parent/pom.xml</relativePath>
+        <artifactId>parent-web</artifactId>
+        <relativePath>../parent-web/pom.xml</relativePath>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>mail-service</artifactId>
     <version>1.0-SNAPSHOT</version>
     <name>Mail-service</name>
+    <packaging>war</packaging>
 
     <dependencies>
         <dependency>
