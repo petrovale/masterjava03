@@ -11,9 +11,9 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>ru.javaops</groupId>
-    <artifactId>Mail-service</artifactId>
+    <artifactId>mail-service</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <name>Mail-service</name>
 
     <dependencies>
         <dependency>

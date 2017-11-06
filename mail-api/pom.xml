@@ -11,9 +11,10 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>ru.javaops</groupId>
-    <artifactId>Mail-api</artifactId>
+    <artifactId>mail-api</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <name>Mail-api</name>
+    <packaging>jar</packaging>
 
     <dependencies>
         <dependency>

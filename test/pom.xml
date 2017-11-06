@@ -11,9 +11,10 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>ru.javaops</groupId>
-    <artifactId>Test</artifactId>
+    <artifactId>test</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <name>Test</name>
+    <packaging>jar</packaging>
 
     <build>
         <plugins>

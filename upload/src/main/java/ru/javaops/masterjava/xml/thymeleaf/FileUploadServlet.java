@@ -19,7 +19,9 @@ import javax.xml.bind.JAXBException;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.XMLEvent;
 
-@WebServlet(urlPatterns = "/upload", loadOnStartup = 1)
+import static ru.javaops.masterjava.xml.thymeleaf.ThymeleafAppUtil.getTemplateEngine;
+
+@WebServlet(urlPatterns = "/")
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 10, //10 MB
         maxFileSize = 1024 * 1024 * 30, // 30 MB
         maxRequestSize = 1024 * 1024 * 50)//50 MB
@@ -50,7 +52,7 @@ public class FileUploadServlet extends HttpServlet {
         WebContext ctx = new WebContext(request, response, request.getServletContext(),
                 request.getLocale());
         ctx.setVariable("users", users);
-        ThymeleafAppUtil.getTemplateEngine().process("fileuploadResponse", ctx, response.getWriter());
+        getTemplateEngine().process("fileuploadResponse", ctx, response.getWriter());
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
@@ -61,7 +63,7 @@ public class FileUploadServlet extends HttpServlet {
 
         WebContext ctx = new WebContext(request, response, request.getServletContext(),
                 request.getLocale());
-        ThymeleafAppUtil.getTemplateEngine().process("upload", ctx, response.getWriter());
+        getTemplateEngine().process("upload", ctx, response.getWriter());
     }
 
 }
