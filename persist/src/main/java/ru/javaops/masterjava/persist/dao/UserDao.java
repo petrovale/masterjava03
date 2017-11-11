@@ -31,6 +31,9 @@ public abstract class UserDao implements AbstractDao {
     @SqlQuery("SELECT * FROM users ORDER BY full_name, email LIMIT :it")
     public abstract List<User> getWithLimit(@Bind int limit);
 
+    @SqlQuery("SELECT * FROM users LIMIT 20")
+    public abstract List<User> getTop20();
+
     @SqlBatch("insert into users (full_name, email, flag) values (:fullName, :email, CAST(:flag AS user_flag))")
     public abstract int[] insertAll(@BindBean List<User> users, @BatchChunkSize int chunk);
 

@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserProcessor {
-    private UserDao dao = DBIProvider.getDao(UserDao.class);
+    private final UserDao dao = DBIProvider.getDao(UserDao.class);
 
     public List<User> process(final InputStream is, int chunk) throws XMLStreamException {
         final StaxStreamProcessor processor = new StaxStreamProcessor(is);
