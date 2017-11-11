@@ -11,6 +11,8 @@ import javax.xml.stream.events.XMLEvent;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class UserProcessor {
     private final UserDao dao = DBIProvider.getDao(UserDao.class);
@@ -26,7 +28,10 @@ public class UserProcessor {
             final User user = new User(fullName, email, flag);
             users.add(user);
         }
-        dao.insertAll(users, chunk);
-        return users;
+
+        int[] ids = dao.insertAll(users, chunk);
+        return IntStream.range(0, users.size()).filter(i -> ids[i] == 1)
+                .mapToObj(users::get)
+                .collect(Collectors.toList());
     }
 }
