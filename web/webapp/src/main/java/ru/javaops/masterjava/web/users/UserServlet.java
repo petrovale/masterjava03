@@ -24,7 +24,7 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         final WebContext webContext = new WebContext(req, resp, req.getServletContext(), req.getLocale());
-        List<User> users = dao.getTop20();
+        List<User> users = dao.getWithLimit(20);
         webContext.setVariable("users", users);
         engine.process("users", webContext, resp.getWriter());
     }
