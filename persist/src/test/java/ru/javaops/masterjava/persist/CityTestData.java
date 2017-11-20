@@ -14,10 +14,10 @@ public class CityTestData {
     public static List<City> CITIES;
 
     public static void init() {
-        SPB = new City("Санкт-Петербург");
-        MOW = new City("Москва");
-        KIV = new City("Киев");
-        MNSK = new City("Минск");
+        SPB = new City("Санкт-Петербург", "spb");
+        MOW = new City("Москва", "mov");
+        KIV = new City("Киев", "kiv");
+        MNSK = new City("Минск", "mnsk");
         CITIES = ImmutableList.of(KIV, MNSK, MOW, SPB);
     }
 
@@ -25,7 +25,7 @@ public class CityTestData {
         CityDao dao = DBIProvider.getDao(CityDao.class);
         dao.clean();
         DBIProvider.getDBI().useTransaction((conn, status) -> {
-            CITIES.forEach(dao::insert);
+            CITIES.forEach(city -> city = dao.insert(city));
         });
     }
 }

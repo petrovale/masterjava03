@@ -16,8 +16,9 @@ CREATE SEQUENCE city_seq START 100000;
 CREATE SEQUENCE project_seq START 100000;
 
 CREATE TABLE cities (
-  id   INTEGER PRIMARY KEY DEFAULT nextval('city_seq'),
-  name TEXT NOT NULL
+  id          INTEGER PRIMARY KEY DEFAULT nextval('city_seq'),
+  name        TEXT NOT NULL,
+  middle_name TEXT NOT NULL
 );
 
 CREATE UNIQUE INDEX city_idx

@@ -27,14 +27,14 @@ public class CityDaoTest extends AbstractDaoTest<CityDao> {
 
     @Test
     public void insertGeneratedId() throws Exception {
-        int id = dao.insertGeneratedId(new City("Иннополис"));
+        int id = dao.insertGeneratedId(new City("Иннополис", "inp"));
         assertEquals(dao.getCurrVal(), id);
     }
 
     @Test
     public void insertWitId() throws Exception {
         int nextId = dao.getNextVal();
-        dao.insertWitId(new City(nextId, "Иннополис"));
+        dao.insertWitId(new City(nextId, "Иннополис", "inp"));
         assertEquals(nextId, dao.getCurrVal());
     }
 

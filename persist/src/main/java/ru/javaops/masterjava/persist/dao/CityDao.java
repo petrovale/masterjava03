@@ -20,11 +20,11 @@ public abstract class CityDao implements AbstractDao {
         return city;
     }
 
-    @SqlUpdate("INSERT INTO cities (name) VALUES (:name) ")
+    @SqlUpdate("INSERT INTO cities (name, middle_name) VALUES (:name, :middleName) ON CONFLICT DO NOTHING")
     @GetGeneratedKeys
     abstract int insertGeneratedId(@BindBean City city);
 
-    @SqlUpdate("INSERT INTO cities (id, name) VALUES (:id, :name)")
+    @SqlUpdate("INSERT INTO cities (id, name, middle_name) VALUES (:id, :name, :middleName) ON CONFLICT DO NOTHING")
     abstract void insertWitId(@BindBean City city);
 
     //   http://stackoverflow.com/questions/13223820/postgresql-delete-all-content
@@ -34,6 +34,9 @@ public abstract class CityDao implements AbstractDao {
 
     @SqlQuery("SELECT * FROM cities ORDER BY name")
     public abstract List<City> getAll();
+
+    @SqlQuery("SELECT id FROM cities WHERE middle_name = :middleName")
+    public abstract int getIdByMiddleName(@Bind("middleName") String middleName);
 
     @SqlQuery("SELECT nextval('city_seq')")
     abstract int getNextVal();
