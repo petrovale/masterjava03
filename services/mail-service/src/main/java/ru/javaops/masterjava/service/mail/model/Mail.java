@@ -29,18 +29,6 @@ public class Mail {
         this.result = result;
     }
 
-    public static Mail ok(String email) {
-        return new Mail(email, OK);
-    }
-
-    public static Mail error(String email, String error) {
-        return new Mail(email, error);
-    }
-
-    public boolean isOk() {
-        return OK.equals(result);
-    }
-
     @Override
     public String toString() {
         return '(' + email + ',' + result + ')';
