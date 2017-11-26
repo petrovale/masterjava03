@@ -32,3 +32,10 @@ CREATE TABLE user_group (
   group_id INTEGER NOT NULL REFERENCES groups (id),
   CONSTRAINT users_group_idx UNIQUE (user_id, group_id)
 );
+--changeset isakov:3
+CREATE TABLE mails (
+  id         SERIAL PRIMARY KEY,
+  email      TEXT NOT NULL,
+  result     TEXT NOT NULL,
+  registered TIMESTAMP           DEFAULT now()
+);
