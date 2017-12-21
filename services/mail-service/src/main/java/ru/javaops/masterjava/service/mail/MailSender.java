@@ -4,12 +4,13 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.apache.commons.mail.EmailAttachment;
 import org.apache.commons.mail.EmailException;
 import ru.javaops.masterjava.ExceptionType;
 import ru.javaops.masterjava.persist.DBIProvider;
 import ru.javaops.masterjava.service.mail.persist.MailCase;
 import ru.javaops.masterjava.service.mail.persist.MailCaseDao;
-import ru.javaops.web.WebStateException;
+import ru.javaops.masterjava.web.WebStateException;
 
 import java.util.Set;
 
@@ -26,6 +27,15 @@ public class MailSender {
         log.info("Send mail to \'" + to + "\' cc \'" + cc + "\' subject \'" + subject + (log.isDebugEnabled() ? "\nbody=" + body : ""));
         String state = MailResult.OK;
         try {
+
+            // Create the attachment
+            EmailAttachment attachment = new EmailAttachment();
+            attachment.setPath("mypictures/john.jpg");
+            attachment.setDisposition(EmailAttachment.ATTACHMENT);
+            attachment.setDescription("Picture of John");
+            attachment.setName("John");
+
+            // Create the email message
             val email = MailConfig.createHtmlEmail();
             email.setSubject(subject);
             email.setHtmlMsg(body);
@@ -39,6 +49,10 @@ public class MailSender {
             //  https://yandex.ru/blog/company/66296
             email.setHeaders(ImmutableMap.of("List-Unsubscribe", "<mailto:masterjava@javaops.ru?subject=Unsubscribe&body=Unsubscribe>"));
 
+            // add the attachment
+            email.attach(attachment);
+
+            // send the email
             email.send();
         } catch (EmailException e) {
             log.error(e.getMessage(), e);
