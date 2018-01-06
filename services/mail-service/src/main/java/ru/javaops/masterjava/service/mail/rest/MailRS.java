@@ -11,14 +11,12 @@ import ru.javaops.masterjava.service.mail.Attachment;
 import ru.javaops.masterjava.service.mail.GroupResult;
 import ru.javaops.masterjava.service.mail.MailServiceExecutor;
 import ru.javaops.masterjava.service.mail.MailWSClient;
-import ru.javaops.masterjava.service.mail.util.Attachments;
+import ru.javaops.masterjava.service.mail.util.MailUtils;
 import ru.javaops.masterjava.web.WebStateException;
 
 import javax.activation.DataHandler;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
@@ -38,7 +36,7 @@ public class MailRS {
     public GroupResult send(@FormDataParam("attach") FormDataBodyPart attachBodyPart,
                             @NotBlank @FormDataParam("users") String users,
                             @FormDataParam("subject") String subject,
-                            @NotBlank @FormDataParam("body") String body) throws WebStateException, IOException {
+                            @NotBlank @FormDataParam("body") String body) throws WebStateException {
         final List<Attachment> attachments;
         if (attachBodyPart == null) {
             attachments = ImmutableList.of();
@@ -49,11 +47,11 @@ public class MailRS {
                 String utf8name = new String(attachName.getBytes("ISO8859_1"), "UTF-8");
                 BodyPartEntity bodyPartEntity = ((BodyPartEntity) attachBodyPart.getEntity());
 
-                attachments = ImmutableList.of(new Attachment(utf8name, new DataHandler((Attachments.ProxyDataSource) bodyPartEntity::getInputStream)));
+                attachments = ImmutableList.of(new Attachment(utf8name, new DataHandler((MailUtils.ProxyDataSource) bodyPartEntity::getInputStream)));
             } catch (UnsupportedEncodingException e) {
                 throw new IllegalStateException(e);
             }
         }
-        return MailServiceExecutor.sendBulk(MailWSClient.split(users), subject, body, attachments);
+        return MailServiceExecutor.sendBulk(MailUtils.split(users), subject, body, attachments);
     }
 }
